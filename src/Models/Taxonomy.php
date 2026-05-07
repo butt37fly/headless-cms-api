@@ -136,8 +136,32 @@ class Taxonomy
         }
     }
 
-    public function delete(): array
+    private function deleteTerms(int $term_id): void
     {
-        return [];
+        $query = "DELETE FROM term_meta WHERE term_id = :term_id";
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->execute([':term_id' => $term_id]);
+    }
+
+    public function delete(int $term_id): void
+    {
+        $this->db->beginTransaction();
+
+        try {
+            $this->deleteTerms($term_id);
+
+            $query = "DELETE FROM terms WHERE id = :term_id";
+
+            $stmt = $this->db->prepare($query);
+
+            $stmt->execute([':term_id' => $term_id]);
+
+            $this->db->commit();
+        } catch (\Throwable $th) {
+            $this->db->rollBack();
+            throw $th;
+        }
     }
 }

@@ -70,11 +70,21 @@ class TaxonomyController extends BaseController
 
     public function update(): Response
     {
-        return Response::error("Pendiente por implementar");
+        return $this->error("Pendiente por implementar");
     }
 
     public function delete(): Response
     {
-        return Response::error("Pendiente por implementar");
+        if (!isset($this->term_id) && $this->term_id === 0) {
+            return $this->error("No se ha especificado el id a eliminar.", 422);
+        }
+
+        try {
+            $this->taxonomy->delete($this->term_id);
+            return $this->success(["message" => "El término se ha eliminado correctamente."]);
+        } catch (\Throwable $e) {
+            error_log($e->getMessage());
+            return $this->error("No se ha podido eliminar el término.", 500);
+        }
     }
 }
