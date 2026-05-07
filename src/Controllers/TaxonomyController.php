@@ -49,15 +49,15 @@ class TaxonomyController extends BaseController
             return $this->error('El título es requerido.', 422);
         }
 
-        if (empty($data['meta'])) {
-            return $this->error('Los atributos del término son requeridos.', 422);
-        }
-
         $title = trim($data['title']);
         $slug = $this->getSlug($title);
 
-        $meta = json_decode($data['meta'], true);
-        $meta = $this->parseMetadata($meta);
+        $meta = [];
+
+        if (isset($data['meta'])) {
+            $meta = json_decode($data['meta'], true);
+            $meta = $this->parseMetadata($meta);
+        }
 
         try {
             $this->taxonomy->upsertTerm($title, $slug, $meta);

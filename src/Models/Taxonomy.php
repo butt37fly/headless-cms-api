@@ -112,27 +112,33 @@ class Taxonomy
 
     public function upsertTerm(string $term_title, string $term_slug, array $meta): void
     {
+        $args = [
+            ":taxonomy_id" => $this->id,
+            ":term_title"  => $term_title,
+            ":term_slug"   => $term_slug
+        ];
+
         $query = "INSERT INTO terms (taxonomy_id, name, slug) VALUES (:taxonomy_id, :term_title, :term_slug) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), name = VALUES(name)";
 
         $stmt = $this->db->prepare($query);
 
-        $this->db->beginTransaction();
+        if (empty($meta)) {
+            $stmt->execute($args);
+        } else {
+            $this->db->beginTransaction();
 
-        try {
-            $stmt->execute([
-                ":taxonomy_id" => $this->id,
-                ":term_title"  => $term_title,
-                ":term_slug"   => $term_slug
-            ]);
+            try {
+                $stmt->execute($args);
 
-            $term_id = $this->db->lastInsertId();
+                $term_id = $this->db->lastInsertId();
 
-            $this->insertTermMeta($term_id, $meta);
+                $this->insertTermMeta($term_id, $meta);
 
-            $this->db->commit();
-        } catch (\Throwable $e) {
-            $this->db->rollBack();
-            throw $e;
+                $this->db->commit();
+            } catch (\Throwable $e) {
+                $this->db->rollBack();
+                throw $e;
+            }
         }
     }
 
