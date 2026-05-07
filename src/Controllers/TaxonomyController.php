@@ -10,10 +10,15 @@ use App\Models\Taxonomy;
 class TaxonomyController extends BaseController
 {
     private Taxonomy $taxonomy;
+    private int $term_id;
 
-    public function __construct(string $slug)
+    public function __construct(array $params)
     {
-        $this->taxonomy = new Taxonomy($slug);
+        $this->taxonomy = new Taxonomy($params[0]);
+
+        if (isset($params[1])) {
+            $this->term_id = $params[1];
+        }
     }
 
     private function parseMetadata(array $data): array
@@ -68,7 +73,7 @@ class TaxonomyController extends BaseController
         return Response::error("Pendiente por implementar");
     }
 
-    public function delete(array $data): Response
+    public function delete(): Response
     {
         return Response::error("Pendiente por implementar");
     }

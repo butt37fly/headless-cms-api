@@ -30,7 +30,7 @@ try {
 
     $router->set_route("GET", "/taxonomy/{slug}", [TaxonomyController::class, 'getAll']);
     $router->set_route("POST", "/taxonomy/{slug}", [TaxonomyController::class, 'create'], ['data' => $_POST]);
-    $router->set_route("DELETE", "/taxonomy/{slug}/{id}", [TaxonomyController::class, 'delete'], ['data' => $_POST]);
+    $router->set_route("DELETE", "/taxonomy/{slug}/{id}", [TaxonomyController::class, 'delete']);
 } catch (\Throwable $th) {
     throw $th;
 }

@@ -68,9 +68,8 @@ class Router
                 $class = $handler[0];
                 $method = $handler[1];
 
-
                 try {
-                    $controller = new $class(...$matches);
+                    $controller = new $class($matches);
                     $response = call_user_func_array(
                         [$controller, $method],
                         $args
