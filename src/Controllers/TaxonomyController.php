@@ -43,10 +43,10 @@ class TaxonomyController extends BaseController
 
         try {
             $this->taxonomy->create($title, $slug);
-            return $this->success(['message' => "La taxonomía '{$slug}' se ha creado correctamente.", 201]);
+            return $this->success(['message' => "La taxonomía '{$slug}' se ha creado correctamente."], 201);
         } catch (\Throwable $e) {
             error_log($e->getMessage());
-            return $this->error("No se ha podido crear la taxonomía '{$slug}'.", 500);
+            return $this->error($e->getMessage(), 409);
         }
     }
 
@@ -65,7 +65,7 @@ class TaxonomyController extends BaseController
             return $this->success(['message' => "La taxonomía '{$reference}' se ha actualizado correctamente."], 201);
         } catch (\Throwable $e) {
             error_log($e->getMessage());
-            return $this->error("No se ha podido actualizar la taxonomía '{$reference}'.", 500);
+            return $this->error($e->getMessage(), 409);
         }
     }
 
