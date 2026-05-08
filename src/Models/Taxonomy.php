@@ -20,7 +20,7 @@ class Taxonomy extends BaseModel
     public function create(string $name, string $slug): void
     {
         if ($this->itemExist('taxonomies', $slug, $name)) {
-            throw new \RuntimeException("El nombre o el slug están duplicados.");
+            throw new \InvalidArgumentException("El nombre o el slug están duplicados.");
         }
 
         $query = "INSERT INTO taxonomies (name, slug) VALUES (:name, :slug)";
@@ -38,11 +38,11 @@ class Taxonomy extends BaseModel
     public function update(string $name, string $slug, string $reference): void
     {
         if (!$this->itemExist('taxonomies', $reference)) {
-            throw new \RuntimeException("La taxonomía indicada no existe.");
+            throw new \InvalidArgumentException("La taxonomía indicada no existe.");
         }
 
         if ($this->itemExist('taxonomies', $slug, $name)) {
-            throw new \RuntimeException("Ya existe una taxonomía con el mismo nombre o slug");
+            throw new \InvalidArgumentException("Ya existe una taxonomía con el mismo nombre o slug");
         }
 
         $query = "UPDATE taxonomies SET name = :name, slug = :slug WHERE slug = :reference";

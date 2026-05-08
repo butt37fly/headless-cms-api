@@ -104,7 +104,7 @@ class Term extends BaseModel
     public function create(string $term_title, string $term_slug, array $meta): void
     {
         if ($this->itemExist('terms', $term_slug, $term_title)) {
-            throw new \RuntimeException("El nombre o el slug están duplicados.");
+            throw new \InvalidArgumentException("El nombre o el slug están duplicados.");
         }
 
         $args = [
@@ -140,11 +140,11 @@ class Term extends BaseModel
     public function update(string $term_title, string $term_slug, array $meta, int $term_id): void
     {
         if (!$this->itemExist('terms', ['id', $term_id])) {
-            throw new \RuntimeException("El término indicado no existe.");
+            throw new \InvalidArgumentException("El término indicado no existe.");
         }
 
         if ($this->itemExist('terms', $term_slug, $term_title)) {
-            throw new \RuntimeException("Ya existe un término con el mismo nombre o slug");
+            throw new \InvalidArgumentException("Ya existe un término con el mismo nombre o slug");
         }
 
         $args = [
