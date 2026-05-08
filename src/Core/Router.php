@@ -41,6 +41,15 @@ class Router
         return in_array($requested_method, $methods);
     }
 
+    private function getDataFromRequest(): array
+    {
+        $content = file_get_contents('php://input');
+
+        $data = json_decode($content, true);
+
+        return is_array($data) ? $data : [];
+    }
+
     public function process_request(string $method, string $uri)
     {
         $is_valid = $this->is_method_allowed($method);
@@ -63,7 +72,7 @@ class Router
                 $path_exist = true;
 
                 $handler = $route['handler'];
-                $args = $route['args'];
+                $args = !empty($route['args']) ? $route['args'] : $this->getDataFromRequest();
 
                 $class = $handler[0];
                 $method = $handler[1];
@@ -72,7 +81,7 @@ class Router
                     $controller = new $class($matches);
                     $response = call_user_func_array(
                         [$controller, $method],
-                        $args
+                        [$args]
                     );
 
                     if ($response instanceof Response) {
