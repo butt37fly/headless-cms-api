@@ -2,18 +2,8 @@
 
 namespace App\Models;
 
-use PDO;
-use App\Core\Database;
-
-class Taxonomy
+class Taxonomy extends BaseModel
 {
-    protected PDO $db;
-
-    public function __construct()
-    {
-        $this->db = Database::getConnection();
-    }
-
     private function taxonomyExist(string $slug, string $name = ""): bool
     {
         $args = [

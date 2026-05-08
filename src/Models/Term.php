@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
-use PDO;
-use App\Core\Database;
 use RuntimeException;
 
-class Term
+class Term extends BaseModel
 {
-    protected PDO $db;
-
     public int $taxonomy_id;
     public string $slug;
 
     public function __construct(string $slug)
     {
-        $this->db = Database::getConnection();
+        parent::__construct();
 
         $this->slug = $slug;
 
