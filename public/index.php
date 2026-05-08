@@ -28,10 +28,10 @@ try {
     $router->set_route("GET", "/posts/{id}", [PostController::class, 'get']);
     $router->set_route("POST", "/post", [PostController::class, 'create']);
 
-    $router->set_route("POST", "/taxonomy/{slug}", [TaxonomyController::class, 'create']);
-    $router->set_route("GET", "/taxonomy/{slug}", [TaxonomyController::class, 'get']);
-    $router->set_route("PUT", "/taxonomy/{slug}", [TaxonomyController::class, 'update']);
-    $router->set_route("DELETE", "/taxonomy/{slug}/{id}", [TaxonomyController::class, 'delete']);
+    $router->set_route("POST", "/taxonomies", [TaxonomyController::class, 'create']);
+    $router->set_route("GET", "/taxonomies", [TaxonomyController::class, 'get']);
+    $router->set_route("PUT", "/taxonomies/{slug}", [TaxonomyController::class, 'update']);
+    $router->set_route("DELETE", "/taxonomies/{slug}", [TaxonomyController::class, 'delete']);
 } catch (\Throwable $th) {
     throw $th;
 }

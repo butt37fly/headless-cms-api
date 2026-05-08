@@ -10,35 +10,44 @@ use App\Models\Taxonomy;
 class TaxonomyController extends BaseController
 {
     private Taxonomy $taxonomy;
-    private int $term_id;
+    private array $args;
 
-    public function __construct(array $params)
+    public function __construct(array $args)
     {
-        $this->taxonomy = new Taxonomy($params[0]);
+        $this->taxonomy = new Taxonomy();
 
-        if (isset($params[1])) {
-            $this->term_id = $params[1];
+        if (!empty($args)) {
+            $this->args['slug'] = $args[0];
         }
-    }
-
-    private function parseMetadata(array $data): array
-    {
-        $result = [];
-
-        foreach ($data as $meta_key => $meta_value) {
-            $meta_key = $this->getSlug($meta_key);
-            $meta_value = trim($meta_value);
-
-            $result[] = ['meta_key' => $meta_key, 'meta_value' => $meta_value];
-        }
-
-        return $result;
     }
 
     public function get(): Response
     {
-        $result = $this->taxonomy->getAll();
-        return $this->success($result);
+        try {
+            $result = $this->taxonomy->getAll();
+            return $this->success($result);
+        } catch (\Throwable $e) {
+            error_log($e->getMessage());
+            return $this->error("No se ha podido obtener la información.");
+        }
+    }
+
+    public function create(array $data): Response
+    {
+        if (empty($data['title'])) {
+            return $this->error('El título es requerido.', 422);
+        }
+
+        $title = trim($data['title']);
+        $slug = $this->getSlug($title);
+
+        try {
+            $this->taxonomy->create($title, $slug);
+            return $this->success(['message' => "La taxonomía '{$slug}' se ha creado correctamente.", 201]);
+        } catch (\Throwable $e) {
+            error_log($e->getMessage());
+            return $this->error("No se ha podido crear la taxonomía '{$slug}'.", 500);
+        }
     }
 
     public function update(array $data): Response
@@ -49,39 +58,35 @@ class TaxonomyController extends BaseController
 
         $title = trim($data['title']);
         $slug = $this->getSlug($title);
-
-        $meta = [];
-
-        if (isset($data['meta'])) {
-            $meta = $this->parseMetadata($data['meta']);
-        }
+        $reference = $this->args['slug'];
 
         try {
-            $this->taxonomy->upsertTerm($title, $slug, $meta);
-            return $this->success(['message' => "El término '{$title}' se ha guardado correctamente."]);
+            $this->taxonomy->update($title, $slug, $reference);
+            return $this->success(['message' => "La taxonomía '{$reference}' se ha actualizado correctamente."], 201);
         } catch (\Throwable $e) {
             error_log($e->getMessage());
-            return $this->error("No se ha podido guardar el término '{$title}'.", 500);
+            return $this->error("No se ha podido actualizar la taxonomía '{$reference}'.", 500);
         }
-    }
-
-    public function create(): Response
-    {
-        return $this->error("Pendiente por implementar");
     }
 
     public function delete(): Response
     {
-        if (!isset($this->term_id) && $this->term_id === 0) {
-            return $this->error("No se ha especificado el id a eliminar.", 422);
+        $slug = $this->args['slug'];
+
+        if (!isset($slug)) {
+            return $this->error("El slug de la taxonomía es requerido.", 422);
         }
 
         try {
-            $this->taxonomy->delete($this->term_id);
-            return $this->success(["message" => "El término se ha eliminado correctamente."]);
+            $result = $this->taxonomy->delete($slug);
+            if ($result) {
+                return $this->success(["message" => "La taxonomía se ha eliminado correctamente."]);
+            } else {
+                return $this->success(["message" => "No se ha encontrado la taxonomía '{$slug}'."]);
+            }
         } catch (\Throwable $e) {
             error_log($e->getMessage());
-            return $this->error("No se ha podido eliminar el término.", 500);
+            return $this->error("No se ha podido eliminar la taxonomía.", 500);
         }
     }
 }
