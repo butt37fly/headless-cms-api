@@ -35,7 +35,7 @@ class TaxonomyController extends BaseController
     public function create(array $data): Response
     {
         if (empty($data['title'])) {
-            return $this->error('El título es requerido.', 422);
+            return $this->error('El título es requerido.', 412);
         }
 
         $title = trim($data['title']);
@@ -53,7 +53,7 @@ class TaxonomyController extends BaseController
     public function update(array $data): Response
     {
         if (empty($data['title'])) {
-            return $this->error('El título es requerido.', 422);
+            return $this->error('El título es requerido.', 412);
         }
 
         $title = trim($data['title']);
@@ -74,7 +74,7 @@ class TaxonomyController extends BaseController
         $slug = $this->args['slug'];
 
         if (!isset($slug)) {
-            return $this->error("El slug de la taxonomía es requerido.", 422);
+            return $this->error("El slug de la taxonomía es requerido.", 412);
         }
 
         try {

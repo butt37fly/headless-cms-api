@@ -54,7 +54,7 @@ class TermController extends BaseController
     public function create(array $data): Response
     {
         if (empty($data['title'])) {
-            return $this->error('El título es requerido.', 422);
+            return $this->error('El título es requerido.', 412);
         }
 
         $title = trim($data['title']);
@@ -78,7 +78,7 @@ class TermController extends BaseController
     public function update(array $data): Response
     {
         if (empty($data['title'])) {
-            return $this->error('El título es requerido.', 422);
+            return $this->error('El título es requerido.', 412);
         }
 
         $title = trim($data['title']);
@@ -102,7 +102,7 @@ class TermController extends BaseController
     public function delete(): Response
     {
         if (!isset($this->term_id) && $this->term_id === 0) {
-            return $this->error("No se ha especificado el id a eliminar.", 422);
+            return $this->error("No se ha especificado el id a eliminar.", 412);
         }
 
         try {
