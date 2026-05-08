@@ -16,24 +16,6 @@ class TaxonomyTest extends DatabaseTestCase
         $taxonomy->create("Testing Category", "testing-category");
     }
 
-    #[TestDox("Devuelve un arreglo al consultar información")]
-    public function test_return_an_array_as_result()
-    {
-        $taxonomy = new Taxonomy();
-        $result = $taxonomy->getAll();
-
-        $this->assertIsArray($result);
-    }
-
-    #[TestDox("Devuelve un arreglo vacío si no encuentra resultados")]
-    public function test_return_an_empty_array_as_result_if_there_is_no_content()
-    {
-        $taxonomy = new Taxonomy();
-        $result = $taxonomy->getAll();
-
-        $this->assertEmpty($result);
-    }
-
     #[TestDox("Arroja una excepción al intentar crear una taxonomía con el mismo título")]
     public function test_throw_an_exception_on_duplicate_title_insert()
     {
@@ -56,7 +38,25 @@ class TaxonomyTest extends DatabaseTestCase
         $taxonomy->create("Testing Tag 2", "testing-tag");
     }
 
-    #[TestDox("Se obtiene la estructura esperada")]
+    #[TestDox("Devuelve un arreglo al consultar información")]
+    public function test_return_an_array_as_result()
+    {
+        $taxonomy = new Taxonomy();
+        $result = $taxonomy->getAll();
+
+        $this->assertIsArray($result);
+    }
+
+    #[TestDox("Devuelve un arreglo vacío si no encuentra resultados")]
+    public function test_return_an_empty_array_as_result_if_there_is_no_content()
+    {
+        $taxonomy = new Taxonomy();
+        $result = $taxonomy->getAll();
+
+        $this->assertEmpty($result);
+    }
+
+    #[TestDox("Devuelve un arreglo con la estructura esperada")]
     public function test_return_expected_headers()
     {
         $headers = ['id', 'name', 'slug'];
