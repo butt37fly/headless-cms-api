@@ -25,25 +25,23 @@ class TaxonomyController extends BaseController
     {
         $result = [];
 
-        foreach ($data as $obj) {
-            foreach ($obj as $meta_key => $meta_value) {
-                $meta_key = $this->getSlug($meta_key);
-                $meta_value = trim($meta_value);
+        foreach ($data as $meta_key => $meta_value) {
+            $meta_key = $this->getSlug($meta_key);
+            $meta_value = trim($meta_value);
 
-                $result[] = ['meta_key' => $meta_key, 'meta_value' => $meta_value];
-            }
+            $result[] = ['meta_key' => $meta_key, 'meta_value' => $meta_value];
         }
 
         return $result;
     }
 
-    public function getAll(): Response
+    public function get(): Response
     {
         $result = $this->taxonomy->getAll();
         return $this->success($result);
     }
 
-    public function create(array $data): Response
+    public function update(array $data): Response
     {
         if (empty($data['title'])) {
             return $this->error('El título es requerido.', 422);
@@ -55,8 +53,7 @@ class TaxonomyController extends BaseController
         $meta = [];
 
         if (isset($data['meta'])) {
-            $meta = json_decode($data['meta'], true);
-            $meta = $this->parseMetadata($meta);
+            $meta = $this->parseMetadata($data['meta']);
         }
 
         try {
@@ -68,7 +65,7 @@ class TaxonomyController extends BaseController
         }
     }
 
-    public function update(): Response
+    public function create(): Response
     {
         return $this->error("Pendiente por implementar");
     }

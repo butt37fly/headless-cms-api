@@ -22,14 +22,15 @@ $dotenv->load();
 $router = new Router();
 
 try {
-    $router->set_methods(['GET', 'POST', 'DELETE']);
+    $router->set_methods(['GET', 'POST', 'PUT', 'DELETE']);
 
     $router->set_route("GET", "/posts", [PostController::class, 'getAll']);
     $router->set_route("GET", "/posts/{id}", [PostController::class, 'get']);
     $router->set_route("POST", "/post", [PostController::class, 'create']);
 
-    $router->set_route("GET", "/taxonomy/{slug}", [TaxonomyController::class, 'getAll']);
-    $router->set_route("POST", "/taxonomy/{slug}", [TaxonomyController::class, 'create'], ['data' => $_POST]);
+    $router->set_route("POST", "/taxonomy/{slug}", [TaxonomyController::class, 'create']);
+    $router->set_route("GET", "/taxonomy/{slug}", [TaxonomyController::class, 'get']);
+    $router->set_route("PUT", "/taxonomy/{slug}", [TaxonomyController::class, 'update']);
     $router->set_route("DELETE", "/taxonomy/{slug}/{id}", [TaxonomyController::class, 'delete']);
 } catch (\Throwable $th) {
     throw $th;
