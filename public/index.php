@@ -15,6 +15,7 @@ use App\Core\Router;
 
 use App\Controllers\PostController;
 use App\Controllers\TaxonomyController;
+use App\Controllers\TermController;
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
@@ -32,6 +33,11 @@ try {
     $router->set_route("GET", "/taxonomies", [TaxonomyController::class, 'get']);
     $router->set_route("PUT", "/taxonomies/{slug}", [TaxonomyController::class, 'update']);
     $router->set_route("DELETE", "/taxonomies/{slug}", [TaxonomyController::class, 'delete']);
+
+    $router->set_route("POST", "/taxonomies/{slug}/terms", [TermController::class, 'create']);
+    $router->set_route("GET", "/taxonomies/{slug}/terms", [TermController::class, 'get']);
+    $router->set_route("PUT", "/taxonomies/{slug}/terms/{id}", [TermController::class, 'update']);
+    $router->set_route("DELETE", "/taxonomies/{slug}/terms/{id}", [TermController::class, 'delete']);
 } catch (\Throwable $th) {
     throw $th;
 }
