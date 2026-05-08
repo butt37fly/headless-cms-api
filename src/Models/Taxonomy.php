@@ -4,22 +4,6 @@ namespace App\Models;
 
 class Taxonomy extends BaseModel
 {
-    private function taxonomyExist(string $slug, string $name = ""): bool
-    {
-        $args = [
-            ":name" => $name,
-            ":slug" => $slug
-        ];
-
-        $query = "SELECT id FROM taxonomies WHERE name = :name OR slug = :slug";
-
-        $stmt = $this->db->prepare($query);
-
-        $stmt->execute($args);
-
-        return !empty($stmt->fetchAll());
-    }
-
     public function getAll(): array
     {
         $query = "SELECT id, name, slug FROM taxonomies";
@@ -35,7 +19,7 @@ class Taxonomy extends BaseModel
 
     public function create(string $name, string $slug): void
     {
-        if ($this->taxonomyExist($slug, $name)) {
+        if ($this->itemExist('taxonomies', $slug, $name)) {
             throw new \RuntimeException("El nombre o el slug están duplicados.");
         }
 
@@ -53,12 +37,12 @@ class Taxonomy extends BaseModel
 
     public function update(string $name, string $slug, string $reference): void
     {
-        if (!$this->taxonomyExist($reference)) {
+        if (!$this->itemExist('taxonomies', $reference)) {
             throw new \RuntimeException("La taxonomía indicada no existe.");
         }
 
-        if ($this->taxonomyExist($slug, $name)) {
-            throw new \RuntimeException("Ya existe un término con el mismo nombre o slug");
+        if ($this->itemExist('taxonomies', $slug, $name)) {
+            throw new \RuntimeException("Ya existe una taxonomía con el mismo nombre o slug");
         }
 
         $query = "UPDATE taxonomies SET name = :name, slug = :slug WHERE slug = :reference";

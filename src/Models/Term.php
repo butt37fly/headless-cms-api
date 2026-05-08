@@ -35,17 +35,6 @@ class Term extends BaseModel
         return $result['id'] ?? 0;
     }
 
-    private function termExist(int $id): bool
-    {
-        $query = "SELECT id FROM terms WHERE id = :id";
-
-        $stmt = $this->db->prepare($query);
-
-        $stmt->execute([":id" => $id]);
-
-        return !empty($stmt->fetchAll());
-    }
-
     private function getMeta(int $id): array
     {
         $query = "SELECT id, meta_key, meta_value FROM `term_meta` WHERE term_id = :term_id";
@@ -114,6 +103,10 @@ class Term extends BaseModel
 
     public function create(string $term_title, string $term_slug, array $meta): void
     {
+        if ($this->itemExist('terms', $term_slug, $term_title)) {
+            throw new \RuntimeException("El nombre o el slug están duplicados.");
+        }
+
         $args = [
             ":taxonomy_id" => $this->taxonomy_id,
             ":term_title"  => $term_title,
@@ -146,6 +139,14 @@ class Term extends BaseModel
 
     public function update(string $term_title, string $term_slug, array $meta, int $term_id): void
     {
+        if (!$this->itemExist('terms', ['id', $term_id])) {
+            throw new \RuntimeException("El término indicado no existe.");
+        }
+
+        if ($this->itemExist('terms', $term_slug, $term_title)) {
+            throw new \RuntimeException("Ya existe un término con el mismo nombre o slug");
+        }
+
         $args = [
             ":term_title"  => $term_title,
             ":term_slug"   => $term_slug,

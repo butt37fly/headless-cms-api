@@ -71,7 +71,7 @@ class TermController extends BaseController
             return $this->success(['message' => "El término '{$title}' se ha creado correctamente."]);
         } catch (\Throwable $e) {
             error_log($e->getMessage());
-            return $this->error("No se ha podido crear el término '{$title}'.", 500);
+            return $this->error($e->getMessage(), 409);
         }
     }
 
@@ -95,7 +95,7 @@ class TermController extends BaseController
             return $this->success(['message' => "El término '{$title}' se ha actualizado correctamente."]);
         } catch (\Throwable $e) {
             error_log($e->getMessage());
-            return $this->error("No se ha podido actualizar el término '{$title}'.", 500);
+            return $this->error($e->getMessage(), 409);
         }
     }
 
