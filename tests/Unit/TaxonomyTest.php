@@ -10,10 +10,12 @@ use Tests\DatabaseTestCase;
 #[CoversClass(Taxonomy::class)]
 class TaxonomyTest extends DatabaseTestCase
 {
-    private function createTaxonomies(Taxonomy $taxonomy): void
+    private function createTaxonomies(Taxonomy $taxonomy): array
     {
         $taxonomy->create("Testing Tag", "testing-tag");
         $taxonomy->create("Testing Category", "testing-category");
+
+        return $taxonomy->getAll();
     }
 
     #[TestDox("Arroja una excepción al intentar crear una taxonomía con el mismo título")]
@@ -62,9 +64,7 @@ class TaxonomyTest extends DatabaseTestCase
         $headers = ['id', 'name', 'slug'];
 
         $taxonomy = new Taxonomy();
-        $this->createTaxonomies($taxonomy);
-
-        $result = $taxonomy->getAll();
+        $result = $this->createTaxonomies($taxonomy);
 
         $this->assertEquals(array_keys($result[0]), $headers);
     }
