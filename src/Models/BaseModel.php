@@ -16,16 +16,19 @@ class BaseModel
 
     protected function itemExist(string $table, string|array $reference, string $name = ""): bool
     {
-        $args = [
-            ":name"  => $name
-        ];
+        $args = [];
 
         if (is_array($reference)) {
-            $query = "SELECT id FROM {$table} WHERE {$reference[0]} = :reference OR name = :name";
+            $query = "SELECT id FROM {$table} WHERE {$reference[0]} = :reference";
             $args[":reference"] = $reference[1];
         } else {
-            $query = "SELECT id FROM {$table} WHERE slug = :reference OR name = :name";
+            $query = "SELECT id FROM {$table} WHERE slug = :reference";
             $args[":reference"] = $reference;
+        }
+
+        if (!empty($name)) {
+            $query .= " OR name = :name";
+            $args[":name"] = $name;
         }
 
         $stmt = $this->db->prepare($query);

@@ -25,9 +25,11 @@ $router = new Router();
 try {
     $router->set_methods(['GET', 'POST', 'PUT', 'DELETE']);
 
+    $router->set_route("POST", "/posts", [PostController::class, 'create']);
     $router->set_route("GET", "/posts", [PostController::class, 'getAll']);
     $router->set_route("GET", "/posts/{id}", [PostController::class, 'get']);
-    $router->set_route("POST", "/post", [PostController::class, 'create']);
+    $router->set_route("PUT", "/posts/{id}", [PostController::class, 'update']);
+    $router->set_route("DELETE", "/posts/{id}", [PostController::class, 'delete']);
 
     $router->set_route("POST", "/taxonomies", [TaxonomyController::class, 'create']);
     $router->set_route("GET", "/taxonomies", [TaxonomyController::class, 'get']);

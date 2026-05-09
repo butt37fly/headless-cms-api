@@ -21,4 +21,12 @@ abstract class BaseController
     {
         return Helpers::getSlug($value);
     }
+
+    protected function sanitizeText(string $value): string
+    {
+        $sanitized = trim($value);
+        $sanitized = strip_tags($sanitized);
+
+        return $sanitized;
+    }
 }
