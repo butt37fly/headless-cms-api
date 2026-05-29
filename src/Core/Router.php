@@ -59,7 +59,7 @@ class Router
 
         if (!$is_valid) {
             error_log("Debe registrar el método antes de utilizarlo.");
-            new Response()::error("El método $method no está permitido.", 405)->send();
+            Response::error("El método $method no está permitido.", 405)->send();
         }
 
         foreach ($this->routes[$method] as $route) {
@@ -88,18 +88,18 @@ class Router
                         $response->send();
                     } else {
                         error_log("La respuesta debe ser una instancia de App\Core\Response");
-                        new Response()::error("Error al obtener la información", 500)->send();
+                        Response::error("Error al obtener la información", 500)->send();
                     }
                 } catch (\Throwable $e) {
                     error_log($e->getMessage());
-                    new Response()::error("La ruta no existe.",)->send();
+                    Response::error($e->getMessage(), 500)->send();
                 }
             }
         }
 
         if (!$path_exist) {
             error_log("Debe registrar la ruta antes de utilizarla.");
-            new Response()::error("La ruta no existe.")->send();
+            Response::error("La ruta no existe.")->send();
         }
     }
 }

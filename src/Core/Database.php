@@ -24,7 +24,12 @@ class Database
 
             try {
                 self::$connection = new PDO(
-                    "mysql:host=" . $_ENV['DB_HOST'] . ";dbname=" . $_ENV['DB_NAME'] . ";charset=utf8",
+                    sprintf(
+                        'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
+                        $_ENV['DB_HOST'],
+                        $_ENV['DB_PORT'],
+                        $_ENV['DB_NAME']
+                    ),
                     $_ENV['DB_USER'],
                     $_ENV['DB_PASS'],
                     $options
