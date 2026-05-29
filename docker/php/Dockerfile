@@ -13,10 +13,10 @@ COPY --from=composer:2.9.8 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY ../composer.* ./
+COPY ./composer.* ./
 
 RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-interaction
 
-COPY ../ .
+COPY ./ .
 
 RUN composer dump-autoload --optimize
