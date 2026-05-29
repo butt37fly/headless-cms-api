@@ -9,6 +9,9 @@
 dev.bat
 .bat
 
+# Database
+db.sql
+
 # Logs
 /storage/logs/*
 *.log
